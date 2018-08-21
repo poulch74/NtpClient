@@ -188,9 +188,9 @@ time_t NTPClient::s_getTime () {
 }
 
 #if NETWORK_TYPE == NETWORK_W5100
-bool NTPClient::begin (String ntpServerName, int8_t timeZone, bool daylight, int8_t minutes, EthernetUDP* udp_conn) {
+bool NTPClient::begin (String ntpServerName, int8_t timeZone, bool daylight, int8_t minutes, EthernetUDP* udp_conn, bool cSyncProv) {
 #elif NETWORK_TYPE == NETWORK_ESP8266 || NETWORK_TYPE == NETWORK_WIFI101 || NETWORK_TYPE == NETWORK_ESP32
-bool NTPClient::begin (String ntpServerName, int8_t timeZone, bool daylight, int8_t minutes, WiFiUDP* udp_conn) {
+bool NTPClient::begin (String ntpServerName, int8_t timeZone, bool daylight, int8_t minutes, WiFiUDP* udp_conn, bool cSyncProv) {
 #endif
     if (!setNtpServerName (ntpServerName)) {
         DEBUGLOG ("Time sync not started\r\n");
@@ -220,7 +220,7 @@ bool NTPClient::begin (String ntpServerName, int8_t timeZone, bool daylight, int
     DEBUGLOG ("Time sync started\r\n");
 
     setSyncInterval (getShortInterval ());
-    setSyncProvider (s_getTime);
+    if(!cSyncProv) setSyncProvider (s_getTime);
 
     return true;
 }
